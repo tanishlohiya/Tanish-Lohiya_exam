@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To-Do List</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>My To-Do List</h1>
+
+        <!-- Input and Add Button -->
+        <div class="input-section">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter a task"
+            >
+
+            <button id="addBtn">Add</button>
+        </div>
+
+        <!-- Tasks will appear here -->
+        <ul id="taskList"></ul>
+
+        <!-- Remaining task count -->
+        <p id="remaining">No tasks yet. Add one above!</p>
+
+    </div>
+
+    <script>
+
+        // Array to store tasks
+        let tasks = [];
+
+        const taskInput = document.getElementById("taskInput");
+        const addBtn = document.getElementById("addBtn");
+        const taskList = document.getElementById("taskList");
+        const remaining = document.getElementById("remaining");
+
+
+        // ADD TASK FUNCTION
+        function addTask() {
+
+            let taskText = taskInput.value.trim();
+
+            // Check empty input
+            if (taskText === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            // Create task object and add to array
+            let newTask = {
+                text: taskText,
+                done: false
+            };
+
+            tasks.push(newTask);
+
+            // Clear input box
+            taskInput.value = "";
+
+            // Display updated task list
+            displayTasks();
+
+            // Focus input again
+            taskInput.focus();
+        }
+
+
+        // DISPLAY TASKS FUNCTION
+        function displayTasks() {
+
+            taskList.innerHTML = "";
+
+            tasks.forEach(function(task, index) {
+
+                let li = document.createElement("li");
+
+                let span = document.createElement("span");
+
+                span.textContent = task.text;
+
+                // Mark completed task
+                if (task.done === true) {
+                    span.classList.add("completed");
+                }
+
+                // Click task to complete or uncomplete
+                span.addEventListener("click", function() {
+
+                    tasks[index].done = !tasks[index].done;
+
+                    displayTasks();
+                });
+
+
+                // Create Delete Button
+                let deleteBtn = document.createElement("button");
+
+                deleteBtn.textContent = "Delete";
+
+                // Delete selected task
+                deleteBtn.addEventListener("click", function() {
+
+                    tasks.splice(index, 1);
+
+                    displayTasks();
+                });
+
+
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
+
+                taskList.appendChild(li);
+
+            });
+
+
+            // Calculate remaining tasks
+            let total = tasks.length;
+
+            let pending = tasks.filter(function(task) {
+                return task.done === false;
+            }).length;
+
+
+            // Update task count
+            if (total === 0) {
+
+                remaining.textContent =
+                    "No tasks yet. Add one above!";
+
+            } else {
+
+                remaining.textContent =
+                    pending + " of " + total + " tasks remaining";
+
+            }
+
+        }
+
+
+        // Add task on button click
+        addBtn.addEventListener("click", addTask);
+
+
+        // Add task by pressing Enter
+        taskInput.addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+                addTask();
+            }
+
+        });
+
+
+        // Initial display
+        displayTasks();
+
+    </script>
+
+</body>
+</html>

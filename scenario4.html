@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalogue</title>
+    <link rel="stylesheet" href="style4.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Product Catalogue</h1>
+
+        <div class="filter-section">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name..."
+            >
+
+            <select id="categoryFilter">
+                <option value="All">All categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Fashion">Fashion</option>
+            </select>
+
+        </div>
+
+        <p id="count"></p>
+
+        <div id="productList" class="product-grid"></div>
+
+    </div>
+
+    <script>
+
+        // Array of product objects
+        const products = [
+            {
+                name: "Wireless Mouse",
+                category: "Electronics",
+                price: 799
+            },
+            {
+                name: "Bluetooth Speaker",
+                category: "Electronics",
+                price: 1999
+            },
+            {
+                name: "USB Cable",
+                category: "Electronics",
+                price: 199
+            },
+            {
+                name: "Notebook Pack",
+                category: "Stationery",
+                price: 249
+            },
+            {
+                name: "Gel Pen Set",
+                category: "Stationery",
+                price: 99
+            },
+            {
+                name: "Running Shoes",
+                category: "Fashion",
+                price: 2499
+            },
+            {
+                name: "Cotton T-Shirt",
+                category: "Fashion",
+                price: 599
+            },
+            {
+                name: "Backpack",
+                category: "Fashion",
+                price: 1299
+            }
+        ];
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const categoryFilter =
+            document.getElementById("categoryFilter");
+
+        const productList =
+            document.getElementById("productList");
+
+        const count =
+            document.getElementById("count");
+
+
+        // Function to display products
+        function displayProducts() {
+
+            let searchText =
+                searchInput.value.toLowerCase();
+
+            let selectedCategory =
+                categoryFilter.value;
+
+            // Apply search and category filters together
+            let filteredProducts = products.filter(function(product) {
+
+                let matchName =
+                    product.name.toLowerCase().includes(searchText);
+
+                let matchCategory =
+                    selectedCategory === "All" ||
+                    product.category === selectedCategory;
+
+                return matchName && matchCategory;
+
+            });
+
+            // Clear previous products
+            productList.innerHTML = "";
+
+            // Show product count
+            if (filteredProducts.length === 0) {
+
+                count.textContent = "No products found.";
+
+            } else {
+
+                count.textContent =
+                    "Showing " + filteredProducts.length +
+                    " of " + products.length + " products";
+
+            }
+
+            // Display filtered products
+            filteredProducts.forEach(function(product) {
+
+                productList.innerHTML += `
+                    <div class="product-card">
+
+                        <h3>${product.name}</h3>
+
+                        <span class="category">
+                            ${product.category}
+                        </span>
+
+                        <p>Rs. ${product.price}</p>
+
+                    </div>
+                `;
+
+            });
+
+        }
+
+        // Search input event
+        searchInput.addEventListener("input", displayProducts);
+
+        // Category change event
+        categoryFilter.addEventListener("change", displayProducts);
+
+        // Display all products initially
+        displayProducts();
+
+    </script>
+
+</body>
+</html>
